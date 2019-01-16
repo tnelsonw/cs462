@@ -21,6 +21,7 @@ A first ruleset for the Quickstart
     send_directive("say", {"something": "Hello World"})
   }
   
+  //Number 4
   rule hello_monkey {
     select when echo monkey
     pre {
@@ -28,7 +29,7 @@ A first ruleset for the Quickstart
     }
     send_directive("say", {"something":"Hello " + name})
   }
-  
+  //Number 5 Ternary Operator 
   // rule hello_monkey {
   //   select when echo monkey
   //   pre {
