@@ -3,9 +3,8 @@ ruleset io.picolabs.twilio_v2 {
     configure using account_sid = ""
                     auth_token = ""
     provides
-        send_sms,
-        messages
-  }
+        send_sms
+    }
  
   global {
     send_sms = defaction(to, from, message) {
@@ -15,11 +14,6 @@ ruleset io.picolabs.twilio_v2 {
                 "To":to,
                 "Body":message
             })
-    }
-    
-    messages = defaction(message_url) {
-       base_url = <<https://#{account_sid}:#{auth_token}@api.twilio.com/2010-04-01/Accounts/#{account_sid}/>>
-       http:get(base_url + message_url)
     }
   }
 }
