@@ -1,6 +1,7 @@
 ruleset wovyn_base {
   meta {
     shares __testing
+    use module sensor_profile
     use module temperature_store
     use module io.picolabs.lesson_key
     use module io.picolabs.twilio_v2 alias twilio
@@ -77,7 +78,7 @@ ruleset wovyn_base {
   
   rule profile {
     select when wovyn profile
-    send_directive(temperature_store:profile().encode())
+    send_directive(sensor_profile:profile().encode())
   }
   
 }

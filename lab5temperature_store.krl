@@ -4,8 +4,7 @@ ruleset temperature_store {
     shares temperatures
     shares threshold_violations
     shares inrange_temperatures
-    shares profile
-    provides temperatures, threshold_violations, inrange_temperatures, profile
+    provides temperatures, threshold_violations, inrange_temperatures
   }
   global {
     __testing = { "queries":
@@ -29,9 +28,6 @@ ruleset temperature_store {
       ent:temps.difference(ent:violations)
     }
     
-    profile = function() {
-      ent:profile.defaultsTo({"sms_number":"3154848975","temperature_threshold":50,"sensor_loc":"unknown","sensor_name":"none"})
-    }
   }
   
   rule collect_temperatures {
@@ -75,30 +71,6 @@ ruleset temperature_store {
     always {
       clear ent:temps;
       clear ent:violations
-    }
-  }
-  
-  rule profile_updated {
-    select when sensor profile_updated
-    pre {
-      sensor_loc = event:attr("sensor_loc")
-      sensor_name = event:attr("sensor_name")
-      threshold = event:attr("temperature_threshold")
-      sms_num = event:attr("sms_number")
-      new_profile = {"sms_number":sms_num, "temperature_threshold":threshold,"sensor_loc":sensor_loc,"sensor_name":sensor_name}
-    }
-    send_directive("Updating profile with new values.")
-    always {
-      clear ent:profile;
-      ent:profile := profile().append(new_profile).slice(1,1)
-    }
-  }
-  
-  rule clear_profile {
-    select when sensor clear_profile
-    send_directive("Clearing profile.")
-    always {
-      clear ent:profile
     }
   }
   
