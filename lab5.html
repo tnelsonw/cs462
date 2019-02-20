@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+			<meta charset="UTF-8">
+					<link rel="stylesheet" href="lab5style.css">
+							<title>Lab 5</title>
+									<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+										<script>
+
+												$('document').ready(function () {
+
+															var startup = new XMLHttpRequest();
+																		var base_url = "http://localhost:8080/sky/event/NLWHWCFvMPLtUyUZnHbiJu/lab5/wovyn/"
+																					var response = "";
+																								startup.open("GET", base_url + "temps", false);
+																											startup.onreadystatechange = function() {
+																															if(startup.readyState == 4 && startup.status == 200) {
+																																				console.log("got response as " + startup.responseText);
+																																									response = startup.responseText;
+																																													}
+																																																	else {
+																																																						console.log("status code is " + startup.status);
+																																																											console.log("Response text is " + startup.responseText);
+																																																															}
+																																																																		}
+																																																																					startup.send();
+																																																																								$("#beginning > p").text(JSON.parse(response).directives[0].name);
+
+																																																																											var arr = JSON.parse(response).directives[0].name;
+																																																																														var l = arr.length - 57;
+																																																																																	var t = arr.substring(l, arr.length - 1);
+																																																																																				var temp = t.indexOf("\":");
+																																																																																							var tt = t.substring(temp, temp + 4);
+																																																																																										var temperature = tt.substring(2, tt.length);
+																																																																																													console.log("LOGGING ARRAY");
+																																																																																																console.log("var temperature is " + temperature);
+																																																																																																			console.log(arr);
+																																																																																																						$("#current > p").text(temperature + " degrees F");
+
+																																																																																																									startup.open("GET", base_url + "violations", false);
+																																																																																																												startup.send();
+																																																																																																															$("#violations > p").text(JSON.parse(response).directives[0].name);
+
+																																																																																																																		startup.open("GET", base_url + "profile", false);
+																																																																																																																					startup.send();
+																																																																																																																								$("#profile > p").text(JSON.parse(response).directives[0].name);
+																																																																																																																										});
+
+																																																																																																																												function updateValues() {
+																																																																																																																															var sensor_name = document.getElementById("name_input").value;
+																																																																																																																																		var sensor_loc = document.getElementById("location_input").value;
+																																																																																																																																					var sms_number = document.getElementById("number_input").value;
+																																																																																																																																								var temperature_threshold = document.getElementById("threshold_input").value;
+																																																																																																																																											var apiurl = "http://localhost:8080/sky/event/NLWHWCFvMPLtUyUZnHbiJu/lab5/sensor/profile_updated";
+																																																																																																																																														if((sensor_name == "" || sensor_name == null) || (sensor_loc == "" || sensor_loc == null) || (sms_number == "" || sms_number == null) || (temperature_threshold == "" || temperature_threshold == null)) {
+																																																																																																																																																		document.getElementById("results").innerHTML = "Cannot have null or empty value!";
+																																																																																																																																																						document.getElementById("results").style.color = "red";
+																																																																																																																																																										return;
+																																																																																																																																																													}
+																																																																																																																																																																var result = "";
+																																																																																																																																																																			var xhttp = new XMLHttpRequest();
+																																																																																																																																																																						xhttp.open("POST", apiurl, false);
+																																																																																																																																																																									xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+																																																																																																																																																																												xhttp.onreadystatechange = function() {
+																																																																																																																																																																																if(xhttp.readyState == 4 && xhttp.status == 200) {
+																																																																																																																																																																																					console.log("got response as " + xhttp.responseText);
+																																																																																																																																																																																									}
+																																																																																																																																																																																													else {
+																																																																																																																																																																																																		console.log("status code is " + xhttp.status);
+																																																																																																																																																																																																		                                        console.log("Response text is " + xhttp.responseText);
+																																																																																																																																																																																																							                                        console.log("Ready state is " + xhttp.readyState);
+																																																																																																																																																																																																																}
+																																																																																																																																																																																																																			}
+																																																																																																																																																																																																																						xhttp.send("sensor_name=" + sensor_name + "&sensor_loc=" +  sensor_loc + "&sms_number=" + sms_number + "&temperature_threshold=" + temperature_threshold);
+																																																																																																																																																																																																																									
+																																																																																																																																																																																																																												
+																																																																																																																																																																																																																														}
+																																																																																																																																																																																																																															</script>
+
+																																																																																																																																																																																																																																</head>
+																																																																																																																																																																																																																																	<body>
+																																																																																																																																																																																																																																			<div id="current">
+																																																																																																																																																																																																																																						<h1>Current Temperature</h1>
+																																																																																																																																																																																																																																									<p>
+																																																																																																																																																																																																																																												</p>
+																																																																																																																																																																																																																																														</div>
+
+																																																																																																																																																																																																																																																<div id="beginning">
+																																																																																																																																																																																																																																																			<h1>Recent Temperature Results</h1>
+																																																																																																																																																																																																																																																						<p>
+																																																																																																																																																																																																																																																									</p>
+																																																																																																																																																																																																																																																											</div>
+
+																																																																																																																																																																																																																																																													<div id="violations">
+																																																																																																																																																																																																																																																																<h1>Log of Threshold Violations</h1>
+																																																																																																																																																																																																																																																																			<p>
+																																																																																																																																																																																																																																																																						</p>
+																																																																																																																																																																																																																																																																								</div>
+
+																																																																																																																																																																																																																																																																										<div id="profile">
+																																																																																																																																																																																																																																																																													<h1>Current Profile</h1>
+																																																																																																																																																																																																																																																																																<p>
+																																																																																																																																																																																																																																																																																			</p>
+																																																																																																																																																																																																																																																																																					</div>
+
+																																																																																																																																																																																																																																																																																							Sensor Name <input id="name_input" type="text" name="name">
+																																																																																																																																																																																																																																																																																									<!--<button id="current_name" type="submit" onclick="updateName()" value="Submit">Update Name</button>-->
+
+																																																																																																																																																																																																																																																																																											Location <input id="location_input" type="text" name="location">
+																																																																																																																																																																																																																																																																																													<!--<button id="location" type="submit" onclick="updateLocation()" value="Submit">Update Location</button> -->
+
+																																																																																																																																																																																																																																																																																															Number <input id="number_input" type="text" name="number">
+																																																																																																																																																																																																																																																																																																	<!--<button id="sms_number" type="submit" onclick="updateNumber()" value="Submit">Update Number</button> -->
+
+																																																																																																																																																																																																																																																																																																			Temperature Threshold <input id="threshold_input" type="text" name="threshold">
+																																																																																																																																																																																																																																																																																																					<button id="update" type="submit" onclick="updateValues()" value="Submit">Update Values</button>
+
+																																																																																																																																																																																																																																																																																																							<p id="results" > </p>
+
+																																																																																																																																																																																																																																																																																																								</body>
+																																																																																																																																																																																																																																																																																																								</html>
+
+
